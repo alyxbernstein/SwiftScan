@@ -2,10 +2,8 @@ package com.example.abernstein.swiftscanguitest;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
+
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -16,13 +14,6 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.google.android.gms.appindexing.Action;
-import com.google.android.gms.appindexing.AppIndex;
-import com.google.android.gms.appindexing.Thing;
-import com.google.android.gms.common.api.GoogleApiClient;
-
-import org.w3c.dom.Text;
-
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -30,17 +21,14 @@ import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity {
     // TODO:add toasts to test everything
-    Button signin = (Button) findViewById(R.id.signin);
-    Button signup = (Button) findViewById(R.id.signup);
+    Button signIn = (Button) findViewById(R.id.signin);
+    Button signUp = (Button) findViewById(R.id.signup);
     CheckBox remember = (CheckBox) findViewById(R.id.rememberme);
     EditText username = (EditText) findViewById(R.id.username);
     EditText password = (EditText) findViewById(R.id.password);
     TextView error = (TextView) findViewById(R.id.error);
 
     public static final String IS_LOGGED_IN = "IsLoggedInPref";
-
-    private GoogleApiClient client;
-
 
     public boolean isLoggedInCheck() {
         //when app launches, it checks a stored boolean to see whether the user has previously logged on.
@@ -132,7 +120,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
-        signup.setOnClickListener(new View.OnClickListener() {
+        signUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String usernameText = username.toString();
@@ -148,7 +136,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        signin.setOnClickListener(new View.OnClickListener() {
+        signIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String usernameText = username.toString();
@@ -157,9 +145,6 @@ public class MainActivity extends AppCompatActivity {
                 signIn(usernameText, passwordText);
             }
         });
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
     @Override
@@ -183,8 +168,5 @@ public class MainActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
-
-
-
 
 }

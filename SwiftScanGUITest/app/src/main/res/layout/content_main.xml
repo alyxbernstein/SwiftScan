@@ -36,30 +36,32 @@
         android:text="Password" />
 
     <Button
-        android:text="Sign In"
+        android:id="@+id/signin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
         android:layout_alignStart="@+id/password"
-        android:id="@+id/signin" />
+        android:layout_centerVertical="true"
+        android:background="#FF890E"
+        android:text="Sign In" />
 
     <Button
-        android:text="Sign Up"
+        android:id="@+id/signup"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/signup"
         android:layout_alignBaseline="@+id/signin"
         android:layout_alignBottom="@+id/signin"
-        android:layout_alignEnd="@+id/password" />
+        android:layout_alignEnd="@+id/password"
+        android:background="#FF890E"
+        android:text="Sign Up" />
 
     <CheckBox
-        android:text="Remember Me?"
+        android:id="@+id/rememberme"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/rememberme"
-        android:layout_marginTop="14dp"
         android:layout_below="@+id/signin"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="14dp"
+        android:text="Remember Me?" />
 
     <TextView
         android:layout_width="wrap_content"
