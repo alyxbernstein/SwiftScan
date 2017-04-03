@@ -18,7 +18,7 @@ import android.widget.Toast;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.IOException;p
+import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity {
     // TODO:add toasts to test everything
