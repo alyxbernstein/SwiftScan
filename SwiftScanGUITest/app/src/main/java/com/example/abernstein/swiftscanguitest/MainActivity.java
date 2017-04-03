@@ -13,11 +13,12 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.IOException;p
 
 public class MainActivity extends AppCompatActivity {
     // TODO:add toasts to test everything
@@ -48,7 +49,6 @@ public class MainActivity extends AppCompatActivity {
     public void signUp(String username, String password, boolean isBoxChecked) throws IOException {
         //TODO:encrypt user data
 
-
         SharedPreferences settings = getSharedPreferences(IS_LOGGED_IN, 0);
         SharedPreferences.Editor editor = settings.edit();
         editor.putBoolean("rememberMe", isBoxChecked);
@@ -56,6 +56,13 @@ public class MainActivity extends AppCompatActivity {
 
         storeFile("UserName", username);
         storeFile("PassWord", password);
+
+        Context context = getApplicationContext();
+        CharSequence text = "Sign Up Complete! Username: " + "Password: ";
+        int duration = Toast.LENGTH_SHORT;
+
+        Toast toast = Toast.makeText(context, text, duration);
+        toast.show();
     }
 
     public boolean checkUsername(String testUsername){
@@ -154,7 +161,6 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
@@ -169,4 +175,5 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    
 }
