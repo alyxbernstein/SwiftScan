@@ -6,6 +6,7 @@ import android.os.Bundle;
 
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -22,12 +23,15 @@ import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity {
     // TODO:add toasts to test everything
-    Button signIn = (Button) findViewById(R.id.signin);
-    Button signUp = (Button) findViewById(R.id.signup);
-    CheckBox remember = (CheckBox) findViewById(R.id.rememberme);
-    EditText username = (EditText) findViewById(R.id.username);
-    EditText password = (EditText) findViewById(R.id.password);
-    TextView error = (TextView) findViewById(R.id.error);
+
+    Button signIn;
+    Button signUp;
+    CheckBox remember;
+    EditText username;
+    EditText password;
+    TextView error;
+    Toolbar toolbar;
+
 
     public static final String IS_LOGGED_IN = "IsLoggedInPref";
 
@@ -57,12 +61,34 @@ public class MainActivity extends AppCompatActivity {
         storeFile("UserName", username);
         storeFile("PassWord", password);
 
-        Context context = getApplicationContext();
-        CharSequence text = "Sign Up Complete! Username: " + "Password: ";
-        int duration = Toast.LENGTH_SHORT;
+        FileInputStream fis = null;
+        String storedUsername = "";
+        try {
+            fis = openFileInput("UserName");
+            storedUsername = String.valueOf(fis.read());
+            fis.close();
 
-        Toast toast = Toast.makeText(context, text, duration);
-        toast.show();
+            String storedPassword = "";
+            fis = openFileInput("PassWord");
+            storedPassword = String.valueOf(fis.read());
+            fis.close();
+
+
+            System.err.println("storedUN: " + storedUsername);
+
+            Context context = getApplicationContext();
+            CharSequence text = "Sign Up Complete! Username: " + storedUsername + "Password: " + storedPassword;
+            int duration = Toast.LENGTH_SHORT;
+
+            Toast toast = Toast.makeText(context, text, duration);
+            toast.show();
+        }
+        catch(Exception e)
+        {
+            Log.d("Exception", e.toString());
+            e.printStackTrace();
+        }
+
     }
 
     public boolean checkUsername(String testUsername){
@@ -109,10 +135,22 @@ public class MainActivity extends AppCompatActivity {
         if (checkPassword(testPassword)&&checkUsername(testUsername))
         {
             //TODO:launch next activity
+            Context context = getApplicationContext();
+            CharSequence text = "Sign In Complete! Username: " + "Password: ";
+            int duration = Toast.LENGTH_SHORT;
+
+            Toast toast = Toast.makeText(context, text, duration);
+            toast.show();
         } else {
             error.setText("Your username or password was incorrect.");
             username.setText("");
             password.setText("");
+            Context context = getApplicationContext();
+            CharSequence text = "Sign In Failed! Username: " + "Password: ";
+            int duration = Toast.LENGTH_SHORT;
+
+            Toast toast = Toast.makeText(context, text, duration);
+            toast.show();
         }
     }
 
@@ -120,12 +158,25 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+
+        signIn = (Button) findViewById(R.id.signin);
+        signUp = (Button) findViewById(R.id.signup);
+        remember = (CheckBox) findViewById(R.id.rememberme);
+        username = (EditText) findViewById(R.id.username);
+        password = (EditText) findViewById(R.id.password);
+        error = (TextView) findViewById(R.id.error);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+
         setSupportActionBar(toolbar);
         if (isLoggedInCheck()) {
+            Context context = getApplicationContext();
+            CharSequence text = "You are already signed in";
+            int duration = Toast.LENGTH_SHORT;
+
+            Toast toast = Toast.makeText(context, text, duration);
+            toast.show();
             //TODO: skip sign in to activity
         }
-
 
         signUp.setOnClickListener(new View.OnClickListener() {
             @Override
