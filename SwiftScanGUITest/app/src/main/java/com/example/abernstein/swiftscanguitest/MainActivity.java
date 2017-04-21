@@ -145,12 +145,30 @@ public class MainActivity extends AppCompatActivity {
             error.setText("Your username or password was incorrect.");
             username.setText("");
             password.setText("");
-            Context context = getApplicationContext();
-            CharSequence text = "Sign In Failed! Username: " + "Password: ";
-            int duration = Toast.LENGTH_SHORT;
+            FileInputStream fis = null;
+            String storedUsername = "";
+            try {
+                fis = openFileInput("UserName");
+                storedUsername = String.valueOf(fis.read());
+                fis.close();
 
-            Toast toast = Toast.makeText(context, text, duration);
-            toast.show();
+                String storedPassword = "";
+                fis = openFileInput("PassWord");
+                storedPassword = String.valueOf(fis.read());
+                fis.close();
+
+                System.err.println("storedUN: " + storedUsername);
+
+                Context context = getApplicationContext();
+                CharSequence text = "Sign In Faked Username: " + storedUsername + "Password: " + storedPassword;
+                int duration = Toast.LENGTH_SHORT;
+
+                Toast toast = Toast.makeText(context, text, duration);
+                toast.show();
+            } catch (Exception e) {
+                Log.d("Exception", e.toString());
+                e.printStackTrace();
+            }
         }
     }
 
