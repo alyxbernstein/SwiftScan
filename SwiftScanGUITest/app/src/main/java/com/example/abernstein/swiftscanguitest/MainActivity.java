@@ -24,111 +24,66 @@ import java.io.IOException;
 public class MainActivity extends AppCompatActivity {
     // TODO:add toasts to test everything
 
-    Button signIn;
-    Button signUp;
-    CheckBox remember;
-    EditText username;
-    EditText password;
-    TextView error;
-    Toolbar toolbar;
-
+    public Button signIn;
+    public Button signUp;
+    public CheckBox remember;
+    public EditText username;
+    public EditText password;
+    public TextView error;
+    public Toolbar toolbar;
 
     public static final String IS_LOGGED_IN = "IsLoggedInPref";
+    public static final String LOGIN = "LoginInfo";
 
     public boolean isLoggedInCheck() {
         //when app launches, it checks a stored boolean to see whether the user has previously logged on.
         //get boolean from storage
         SharedPreferences settings = getSharedPreferences(IS_LOGGED_IN, 0);
-        return settings.getBoolean("isBoxChecked", false);
+        return settings.getBoolean("rememberMe", false);
 
     }
 
-    public void storeFile(String FILENAME, String DATA) throws IOException {
-
-        FileOutputStream fos = openFileOutput(FILENAME, Context.MODE_PRIVATE);
-        fos.write(DATA.getBytes());
-        fos.close();
-    }
-
-    public void signUp(String username, String password, boolean isBoxChecked) throws IOException {
+    public void signUp(String username, String password, boolean isBoxChecked) {
         //TODO:encrypt user data
-
         SharedPreferences settings = getSharedPreferences(IS_LOGGED_IN, 0);
-        SharedPreferences.Editor editor = settings.edit();
-        editor.putBoolean("rememberMe", isBoxChecked);
-        editor.apply();
+        SharedPreferences unpw = getSharedPreferences(LOGIN, 0);
 
-        storeFile("UserName", username);
-        storeFile("PassWord", password);
+        SharedPreferences.Editor settingsEditor = settings.edit();
+        settingsEditor.putBoolean("rememberMe", isBoxChecked);
+        settingsEditor.apply();
 
-        FileInputStream fis = null;
-        String storedUsername = "";
-        try {
-            fis = openFileInput("UserName");
-            storedUsername = String.valueOf(fis.read());
-            fis.close();
+        SharedPreferences.Editor unpwEditor = unpw.edit();
+        unpwEditor.putString("Username", username);
+        unpwEditor.putString("Password", password);
+        unpwEditor.apply();
 
-            String storedPassword = "";
-            fis = openFileInput("PassWord");
-            storedPassword = String.valueOf(fis.read());
-            fis.close();
+        Boolean checkIsLoggedIn = settings.getBoolean("rememberMe", isBoxChecked);
+        String storedUsername = unpw.getString("Username", "FAIL");
+        String storedPassword = unpw.getString("Password", "FAIL");
 
+        Context context = getApplicationContext();
+        CharSequence text = "Sign Up Complete! Username: " + storedUsername + " Password: " + storedPassword + " "
+                + checkIsLoggedIn.toString();
+        int duration = Toast.LENGTH_SHORT;
 
-            System.err.println("storedUN: " + storedUsername);
-
-            Context context = getApplicationContext();
-            CharSequence text = "Sign Up Complete! Username: " + storedUsername + "Password: " + storedPassword;
-            int duration = Toast.LENGTH_SHORT;
-
-            Toast toast = Toast.makeText(context, text, duration);
-            toast.show();
-        }
-        catch(Exception e)
-        {
-            Log.d("Exception", e.toString());
-            e.printStackTrace();
-        }
+        Toast toast = Toast.makeText(context, text, duration);
+        toast.show();
 
     }
 
     public boolean checkUsername(String testUsername){
-        FileInputStream fis = null;
-        String storedUsername = "";
-        try {
-            fis = openFileInput("UserName");
-            storedUsername = String.valueOf(fis.read());
-            fis.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        SharedPreferences unpw = getSharedPreferences(LOGIN, 0);
+        String storedUsername = unpw.getString("Username","FAIL");
 
-        if (testUsername.equals(storedUsername)){
-            return true;
-        } else {
-            return false;
-        }
+        return testUsername.equalsIgnoreCase(storedUsername);
+
     }
 
     public boolean checkPassword(String testPassword){
-        FileInputStream fis = null;
-        String storedPassword = "";
-        try {
-            fis = openFileInput("PassWord");
-            storedPassword = String.valueOf(fis.read());
-            fis.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        SharedPreferences unpw = getSharedPreferences(LOGIN, 0);
+        String storedPassword = unpw.getString("Password","FAIL");
 
-        if (testPassword.equals(storedPassword)){
-            return true;
-        } else {
-            return false;
-        }
+        return testPassword.equals(storedPassword);
     }
 
     public void signIn(String testPassword, String testUsername){
@@ -194,19 +149,24 @@ public class MainActivity extends AppCompatActivity {
             Toast toast = Toast.makeText(context, text, duration);
             toast.show();
             //TODO: skip sign in to activity
+        } else {
+            Context context = getApplicationContext();
+            CharSequence text = "You are not signed in";
+            int duration = Toast.LENGTH_SHORT;
+
+            Toast toast = Toast.makeText(context, text, duration);
+            toast.show();
         }
+
 
         signUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String usernameText = username.toString();
-                String passwordText = password.toString();
+                String usernameText = username.getText().toString();
+                String passwordText = password.getText().toString();
                 boolean isBoxChecked = remember.isChecked();
-                try {
-                    signUp(usernameText, passwordText, isBoxChecked);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+
+                signUp(usernameText, passwordText, isBoxChecked);
 
                 //TODO: launch next activity
             }
@@ -215,8 +175,8 @@ public class MainActivity extends AppCompatActivity {
         signIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String usernameText = username.toString();
-                String passwordText = password.toString();
+                String usernameText = username.getText().toString();
+                String passwordText = password.getText().toString();
                 //TODO: launch next activity
                 signIn(usernameText, passwordText);
             }
