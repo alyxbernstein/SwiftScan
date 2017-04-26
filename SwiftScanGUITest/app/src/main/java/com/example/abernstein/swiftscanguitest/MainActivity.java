@@ -1,6 +1,7 @@
 package com.example.abernstein.swiftscanguitest;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
@@ -22,7 +23,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity {
-    // TODO:add toasts to test everything
 
     public Button signIn;
     public Button signUp;
@@ -57,18 +57,7 @@ public class MainActivity extends AppCompatActivity {
         unpwEditor.putString("Password", password);
         unpwEditor.apply();
 
-        Boolean checkIsLoggedIn = settings.getBoolean("rememberMe", isBoxChecked);
-        String storedUsername = unpw.getString("Username", "FAIL");
-        String storedPassword = unpw.getString("Password", "FAIL");
-
-        Context context = getApplicationContext();
-        CharSequence text = "Sign Up Complete! Username: " + storedUsername + " Password: " + storedPassword + " "
-                + checkIsLoggedIn.toString();
-        int duration = Toast.LENGTH_SHORT;
-
-        Toast toast = Toast.makeText(context, text, duration);
-        toast.show();
-
+        openNFCActivity();
     }
 
     public boolean checkUsername(String testUsername){
@@ -89,42 +78,15 @@ public class MainActivity extends AppCompatActivity {
     public void signIn(String testPassword, String testUsername){
         if (checkPassword(testPassword)&&checkUsername(testUsername))
         {
-            //TODO:launch next activity
-            Context context = getApplicationContext();
-            CharSequence text = "Sign In Complete! Username: " + "Password: ";
-            int duration = Toast.LENGTH_SHORT;
-
-            Toast toast = Toast.makeText(context, text, duration);
-            toast.show();
+            openNFCActivity();
         } else {
             error.setText("Your username or password was incorrect.");
-            username.setText("");
-            password.setText("");
-            FileInputStream fis = null;
-            String storedUsername = "";
-            try {
-                fis = openFileInput("UserName");
-                storedUsername = String.valueOf(fis.read());
-                fis.close();
-
-                String storedPassword = "";
-                fis = openFileInput("PassWord");
-                storedPassword = String.valueOf(fis.read());
-                fis.close();
-
-                System.err.println("storedUN: " + storedUsername);
-
-                Context context = getApplicationContext();
-                CharSequence text = "Sign In Faked Username: " + storedUsername + "Password: " + storedPassword;
-                int duration = Toast.LENGTH_SHORT;
-
-                Toast toast = Toast.makeText(context, text, duration);
-                toast.show();
-            } catch (Exception e) {
-                Log.d("Exception", e.toString());
-                e.printStackTrace();
-            }
         }
+    }
+
+    public void openNFCActivity(){
+        Intent intent = new Intent(this, NFCActivity.class);
+        startActivity(intent);
     }
 
     @Override
@@ -148,7 +110,7 @@ public class MainActivity extends AppCompatActivity {
 
             Toast toast = Toast.makeText(context, text, duration);
             toast.show();
-            //TODO: skip sign in to activity
+            openNFCActivity();
         } else {
             Context context = getApplicationContext();
             CharSequence text = "You are not signed in";
@@ -167,8 +129,6 @@ public class MainActivity extends AppCompatActivity {
                 boolean isBoxChecked = remember.isChecked();
 
                 signUp(usernameText, passwordText, isBoxChecked);
-
-                //TODO: launch next activity
             }
         });
 
@@ -177,7 +137,6 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String usernameText = username.getText().toString();
                 String passwordText = password.getText().toString();
-                //TODO: launch next activity
                 signIn(usernameText, passwordText);
             }
         });
