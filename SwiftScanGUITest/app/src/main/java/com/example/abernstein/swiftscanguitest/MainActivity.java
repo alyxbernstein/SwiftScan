@@ -5,6 +5,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -40,10 +41,20 @@ public class MainActivity extends AppCompatActivity {
         String newName = intent.getStringExtra("NAME");
         int newID = intent.getIntExtra("ID", 0);
 
+        Company newCompany;
+
         FloatingActionButton floatingActionButton = (FloatingActionButton)findViewById(R.id.fab);
+
+        if (newID != 0){
+            newCompany = new Company(this, newID, newName);
+            addNewCompany(newCompany);
+        }
+
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, listOfCompanies);
         final ListView listView = (ListView)findViewById(R.id.listview);
         listView.setAdapter(adapter);
+
+
 
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
